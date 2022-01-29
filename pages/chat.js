@@ -56,11 +56,7 @@ export default function ChatPage() {
             padding: '16px',
           }}
         >
-          {/* {listMessage.map(mensagem => {
-            return (
-              <li key={mensagem.id}>{mensagem.texto}</li>
-            )
-          })} */}
+
           <MessageList messages={listMessage} />
 
           <Box
