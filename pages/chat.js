@@ -148,7 +148,13 @@ function MessageList({ messages, setMessages }) {
       return message.id !== messageId;
     });
 
-    setMessages(newList);
+    supabaseClient
+      .from('messages')
+      .delete()
+      .match({ 'id': messageId })
+      .then(() => {
+        setMessages(newList);
+      })
   }
 
   return (
