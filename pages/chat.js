@@ -115,8 +115,8 @@ function Header() {
 
 function MessageList({ messages, setMessages }) {
   const removeMessage = (messageId) => {
-    const newList = messages.filter(function (item) {
-      return item.id !== messageId;
+    const newList = messages.filter((message) => {
+      return message.id !== messageId;
     });
 
     setMessages(newList);
