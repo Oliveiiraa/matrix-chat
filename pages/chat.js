@@ -10,7 +10,7 @@ export default function ChatPage() {
     const message = {
       texto: newMessage,
       de: 'Oliveiiraa',
-      id: listMessage.length + 1
+      id: Math.random()
     }
     setListMessage([
       message,
@@ -57,7 +57,7 @@ export default function ChatPage() {
           }}
         >
 
-          <MessageList messages={listMessage} />
+          <MessageList messages={listMessage} setMessages={setListMessage} />
 
           <Box
             as="form"
@@ -113,12 +113,20 @@ function Header() {
   )
 }
 
-function MessageList(props) {
+function MessageList({ messages, setMessages }) {
+  const removeMessage = (messageId) => {
+    const newList = messages.filter(function (item) {
+      return item.id !== messageId;
+    });
+
+    setMessages(newList);
+  }
+
   return (
     <Box
       tag="ul"
       styleSheet={{
-        overflow: 'scroll',
+        overflowY: 'scroll',
         display: 'flex',
         flexDirection: 'column-reverse',
         flex: 1,
@@ -126,7 +134,7 @@ function MessageList(props) {
         marginBottom: '16px',
       }}
     >
-      {props.messages.map(message => {
+      {messages.map(message => {
         return (
           <Text
             key={message.id}
@@ -140,6 +148,9 @@ function MessageList(props) {
               }
             }}
           >
+            <Box styleSheet={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Box onClick={() => { removeMessage(message.id) }} styleSheet={{ cursor: 'pointer' }}>X</Box>
+            </Box>
             <Box
               styleSheet={{
                 marginBottom: '8px',
@@ -169,7 +180,9 @@ function MessageList(props) {
                 {(new Date().toLocaleDateString())}
               </Text>
             </Box>
-            {message.texto}
+            <Text styleSheet={{ marginLeft: '15px' }}>
+              {message.texto}
+            </Text>
           </Text>
         )
       })}
