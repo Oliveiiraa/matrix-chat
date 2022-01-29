@@ -9,6 +9,25 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5v
 const SUPABASE_URL = 'https://erywqccdvbvilvckwhos.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const listMessagesSocket = (setListMessage) => {
+  supabaseClient
+    .from('messages')
+    .on('*', () => {
+      getAllMessages(setListMessage);
+    })
+    .subscribe();
+}
+
+const getAllMessages = (setListMessage) => {
+  supabaseClient
+    .from('messages')
+    .select('*')
+    .order('id', { ascending: false })
+    .then(({ data }) => {
+      setListMessage(data)
+    });
+}
+
 export default function ChatPage() {
   const router = useRouter();
   const userlogged = router.query.username;
@@ -16,13 +35,8 @@ export default function ChatPage() {
   const [listMessage, setListMessage] = useState([]);
 
   useEffect(() => {
-    supabaseClient
-      .from('messages')
-      .select('*')
-      .order('id', { ascending: false })
-      .then(({ data }) => {
-        setListMessage(data)
-      });
+    getAllMessages(setListMessage);
+    listMessagesSocket(setListMessage);
   }, []);
 
   const handleSubmit = (newMessage) => {
