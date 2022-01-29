@@ -24,6 +24,11 @@ const getAllMessages = (setListMessage) => {
     .select('*')
     .order('id', { ascending: false })
     .then(({ data }) => {
+      new Audio('../so-proud-notification.mp3').play();
+
+      if (Notification.permission == 'granted') {
+        new Notification('New message today!')
+      }
       setListMessage(data)
     });
 }
@@ -35,6 +40,7 @@ export default function ChatPage() {
   const [listMessage, setListMessage] = useState([]);
 
   useEffect(() => {
+    Notification.requestPermission();
     getAllMessages(setListMessage);
     listMessagesSocket(setListMessage);
   }, []);
