@@ -48,7 +48,6 @@ export default function PaginaInicial() {
             backgroundColor: appConfig.theme.colors.neutrals[700],
           }}
         >
-          {/* Formulário */}
           <Box
             as="form"
             onSubmit={(e) => {
@@ -83,7 +82,7 @@ export default function PaginaInicial() {
               label='Entrar'
               onClick={(e) => {
                 setUsername(e.target.value)
-                router.push('/chat')
+                router.push(`/chat?username=${username}`)
               }}
               fullWidth
               buttonColors={{
@@ -94,10 +93,7 @@ export default function PaginaInicial() {
               }}
             />
           </Box>
-          {/* Formulário */}
 
-
-          {/* Photo Area */}
           <Box
             styleSheet={{
               display: 'flex',
@@ -132,7 +128,6 @@ export default function PaginaInicial() {
               {username}
             </Text>
           </Box>
-          {/* Photo Area */}
         </Box>
       </Box>
     </>

@@ -2,12 +2,16 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import { createClient } from '@supabase/supabase-js';
 import React, { useState, useEffect } from 'react';
 import appConfig from '../config.json';
+import { useRouter } from 'next/router';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ5MTY5NywiZXhwIjoxOTU5MDY3Njk3fQ.lsmoNxkGYq7OCWnD_5syH1N3etW3wWeXfDBgRfWEous';
 const SUPABASE_URL = 'https://erywqccdvbvilvckwhos.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default function ChatPage() {
+  const router = useRouter();
+  const userlogged = router.query.username;
   const [message, setMessage] = useState('');
   const [listMessage, setListMessage] = useState([]);
 
@@ -24,7 +28,7 @@ export default function ChatPage() {
   const handleSubmit = (newMessage) => {
     const message = {
       texto: newMessage,
-      de: 'Oliveiiraa'
+      de: userlogged
     }
 
     supabaseClient.
@@ -106,6 +110,11 @@ export default function ChatPage() {
                 backgroundColor: appConfig.theme.colors.neutrals[800],
                 marginRight: '12px',
                 color: appConfig.theme.colors.neutrals[200],
+              }}
+            />
+            <ButtonSendSticker
+              onStickerClick={(sticker) => {
+                handleSubmit(`:sticker: ${sticker}`);
               }}
             />
           </Box>
@@ -199,9 +208,15 @@ function MessageList({ messages, setMessages }) {
                 {(new Date().toLocaleDateString())}
               </Text>
             </Box>
-            <Text styleSheet={{ marginLeft: '15px' }}>
-              {message.texto}
-            </Text>
+            {message.texto.startsWith(':sticker:') ? (
+              <Box>
+                <Image src={message.texto.replace(':sticker:', '')} styleSheet={{ maxWidth: '100px', marginLeft: '15px' }}></Image>
+              </Box>
+            ) : (
+              <Text styleSheet={{ marginLeft: '15px' }}>
+                {message.texto}
+              </Text>
+            )}
           </Text>
         )
       })}
